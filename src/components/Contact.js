@@ -2,12 +2,14 @@ import React, { Component } from "react";
 // import { Link } from "react-router-dom";
 
 class Contact extends Component {
+  _isMounted = false;
   state = {
     items: "",
     img: ""
   };
 
-  componentWillMount() {
+  componentDidMount() {
+    this._isMounted = true;
     fetch(
       `https://fortnite-public-api.theapinetwork.com/prod09/item/get?ids=${
         this.props.match.params.id
@@ -15,12 +17,18 @@ class Contact extends Component {
     )
       .then(res => res.json())
       .then(res => {
-        this.setState({
-          items: res,
-          img: res.images
-        });
+        if (this._isMounted) {
+          this.setState({
+            items: res,
+            img: res.images
+          });
+        }
         console.log(res);
       });
+  }
+
+  componentWillUnmount() {
+    this._isMounted = false;
   }
 
   render() {

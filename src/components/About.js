@@ -1,19 +1,28 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 class About extends Component {
+  _isMounted = false;
   state = {
     item: []
   };
 
-  componentWillMount() {
+  componentDidMount() {
+    this._isMounted = true;
     fetch("https://fortnite-public-api.theapinetwork.com/prod09/upcoming/get")
       .then(res => res.json())
       .then(res => {
-        this.setState({
-          item: res.items
-        });
+        if (this._isMounted) {
+          this.setState({
+            item: res.items
+          });
+        }
+
         console.log(res);
       });
+  }
+
+  componentWillUnmount() {
+    this._isMounted = false;
   }
 
   render() {
